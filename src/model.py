@@ -9,7 +9,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping
-from keras.models import load_model
+# from keras.models import load_model
 import joblib
 
 # Download required NLTK data
