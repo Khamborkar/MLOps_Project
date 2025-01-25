@@ -63,7 +63,7 @@ def build_model():
 # Load the trained model and tokenizer
 def load_model_and_tokenizer():
     # model = load_model('model.h5')
-    model = build_model()
+    test_model = build_model()
     test_model = model.save(test_model.h5)
     tokenizer = joblib.load('tokenizer.pkl')
     return model, tokenizer
