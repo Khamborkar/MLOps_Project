@@ -1,3 +1,5 @@
+# lint-fixme: NoInheritFromObject
+
 import unittest
 from src.model import model  # Replace with the actual function name
 from src.model import clean_text
