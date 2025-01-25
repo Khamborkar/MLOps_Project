@@ -106,8 +106,8 @@ irrelevant_sentiment = irrelevant_words['text']
 # plt.show()
 # plt.figure(figsize=(6,6))
 # plt.pie(x =train_df['airline_sentiment'].value_counts().values, 
-            labels=train_df['airline_sentiment'].value_counts().keys(),
-            autopct="%1.1f%%", textprops={"fontsize":10,"fontweight":"black"})
+#             labels=train_df['airline_sentiment'].value_counts().keys(),
+#             autopct="%1.1f%%", textprops={"fontsize":10,"fontweight":"black"})
 # plt.title('Sentiments Distribution') 
 # plt.show()
 pd.crosstab(train_df['airline_sentiment'], 
