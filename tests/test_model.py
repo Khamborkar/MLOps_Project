@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 import unittest
 import pandas as pd
 import numpy as np
