@@ -62,9 +62,10 @@ def build_model():
 
 # Load the trained model and tokenizer
 def load_model_and_tokenizer():
-    model = keras.load_model('model.h5')
+    model = load_model('model.h5')
     tokenizer = joblib.load('tokenizer.pkl')
     return model, tokenizer
+
 
 # Predict sentiment
 def predict_sentiment(model, tokenizer, text, max_len=100):
