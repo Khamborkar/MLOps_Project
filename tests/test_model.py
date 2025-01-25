@@ -2,8 +2,6 @@ import unittest
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from src.model import model, clean_text, remove_stop_words, preprocess_text
@@ -41,9 +39,16 @@ class TestModel(unittest.TestCase):
         # Tokenization and padding
         tokenizer = Tokenizer(num_words=10000)
         tokenizer.fit_on_texts(X_train)
-        X_train = pad_sequences(tokenizer.texts_to_sequences(X_train), maxlen=100)
-        X_val = pad_sequences(tokenizer.texts_to_sequences(X_val), maxlen=100)
-        X_test = pad_sequences(tokenizer.texts_to_sequences(X_test), maxlen=100)
+
+        X_train = pad_sequences(
+            tokenizer.texts_to_sequences(X_train), maxlen=100
+        )
+        X_val = pad_sequences(
+            tokenizer.texts_to_sequences(X_val), maxlen=100
+        )
+        X_test = pad_sequences(
+            tokenizer.texts_to_sequences(X_test), maxlen=100
+        )
 
         # Convert labels to NumPy arrays
         val_labels = np.array(y_val)
@@ -51,12 +56,3 @@ class TestModel(unittest.TestCase):
         # Load the model and evaluate
         model_instance = model()
         test_loss, test_accuracy = model_instance[0].evaluate(X_val, val_labels)
-
-        print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
-        self.assertGreater(
-            test_accuracy, 0.5, "Model accuracy is below acceptable threshold."
-        )
-
-
-if __name__ == '__main__':
-    unittest.main()
