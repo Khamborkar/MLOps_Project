@@ -43,10 +43,12 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+        pip install .
 
-    - name: Set PYTHONPATH to src directory
+    - name: Set PYTHONPATH environment variable
       run: |
-        export PYTHONPATH=$(pwd)/src
+        echo "PYTHONPATH=$(pwd)/src" >> $GITHUB_ENV
+        echo "PYTHONPATH is set to $PYTHONPATH"
 
     - name: Run tests
       run: |
