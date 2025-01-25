@@ -35,6 +35,7 @@ train_df.shape
 # train_df.isna().sum()
 # train_df.duplicated().sum()
 # train_df.shape
+
 def clean_text(text):
     # Convert all text to lowercase.
     text = text.lower()
@@ -71,6 +72,7 @@ def clean_text(text):
     text = re.sub(r"\'m", " am", text)
     text = re.sub(r'unk' , ' ' , text)
     return text
+    
 train_df['text'] = train_df['text'].apply(clean_text)
 valid_df['text'] = valid_df['text'].apply(clean_text)
 # train_df.head()
@@ -78,8 +80,10 @@ stemmer = PorterStemmer()
 stop_words = set(stopwords.words('english'))
 def preprocess_text(text):
     words = text.split()
-    processed_words = [stemmer.stem(word) for word in words if word not in stop_words]
+    processed_words = [stemmer.stem(word) for word in words 
+                       if word not in stop_words]
     return ' '.join(processed_words)
+    
 # Apply preprocessing to all text
 train_df['text'] = train_df['text'].apply(preprocess_text)
 valid_df['text'] = valid_df['text'].apply(preprocess_text)
@@ -218,12 +222,14 @@ X_val = pad_sequences(val_sequences, maxlen=max_sequence_length)
 with open('tokenizer2.pkl', 'wb') as file:
     pickle.dump(tokenizer, file)
 print("The tokenizer has been saved.")
+
 # Function to remove the stop words
 def remove_stop_words(text):
     stop_words = set(stopwords.words('english'))
     words = word_tokenize(text)
     filtered_words = [word for word in words if word not in stop_words and word not in string.punctuation]
     return " ".join(filtered_words)
+    
 # create 'processed_text' which contains the preprocessed text
 df['processed_text'] = df['text'].apply(clean_text)
 df['processed_text'] = df['processed_text'].apply(remove_stop_words)
