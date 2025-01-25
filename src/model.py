@@ -104,14 +104,20 @@ train_df = train_df[['text','airline_sentiment']]
 train_df.sample(5)
 valid_df = valid_df[['text','airline_sentiment']]
 valid_df.sample(5)
-train_df['airline_sentiment'] = train_df['airline_sentiment'].map({'positive': 1,
-                                                                   'negative': 0,
-                                                                   'neutral': 2,
-                                                                   'irrelevant': 2})
-valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map({'positive': 1,
-                                                                   'negative': 0,
-                                                                   'neutral': 2,
-                                                                   'irrelevant': 2})
+train_df['airline_sentiment'] = train_df['airline_sentiment'].map(
+    {
+        'positive' : 1,
+        'negative' : 0,
+        'neutral' : 2,
+        'irrelevant' : 2
+    })
+valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map(
+    {
+        'positive' : 1,
+        'negative' : 0,
+        'neutral' : 2,
+        'irrelevant' : 2
+    })
 train_texts = train_df['text'].values
 train_labels = train_df['airline_sentiment'].values
 val_texts = valid_df['text'].values
@@ -139,7 +145,12 @@ def remove_stop_words(text):
 df['processed_text'] = df['text'].apply(clean_text)
 df['processed_text'] = df['processed_text'].apply(remove_stop_words)
 # Create sentiment value from sentiment
-df['airline_sentiment_value'] = df['airline_sentiment'].map({'positive': 1 , 'negative': 0 , 'neutral':2})
+df['airline_sentiment_value'] = df['airline_sentiment'].map(
+    {
+        'positive' : 1,
+        'negative' : 0,
+        'neutral' : 2
+    })
 # df.head()
 X_train, X_temp, y_train, y_temp = train_test_split(df['processed_text'],
                                                     df['airline_sentiment_value'],
@@ -150,7 +161,7 @@ X_val, X_test, y_val, y_test = train_test_split(X_temp,
                                                 test_size = 0.5,
                                                 random_state = 42)
 # Tokenization and padding
-tokenizer = Tokenizer(num_words=10000)
+tokenizer = Tokenizer(num_words = 10000)
 tokenizer.fit_on_texts(X_train)
 train_sequences = tokenizer.texts_to_sequences(X_train)
 test_sequences = tokenizer.texts_to_sequences(X_test)
@@ -176,7 +187,7 @@ def model():
         layers.LSTM(64, return_sequences=True),
         layers.LSTM(32),
         layers.Dropout(0.2),
-        Dense(3, activation ='softmax')
+        Dense(3, activation = 'softmax')
     ])
     model.compile(
         optimizer = 'adam',
