@@ -36,6 +36,7 @@ train_df.shape
 # train_df.duplicated().sum()
 # train_df.shape
 
+
 def clean_text(text):
     # Convert all text to lowercase.
     text = text.lower()
@@ -45,7 +46,8 @@ def clean_text(text):
     text = re.sub(r'[^\x00-\x7F]+', ' ', text)
     # Remove punctuation and other symbols
     text = re.sub(r'[^a-zA-Z0-9\s]', ' ', text)
-    # Delete numbers (optional, if you don't want to delete numbers, delete this line)
+    # Delete numbers (optional, if you don't want
+    # to delete numbers, delete this line)
     text = re.sub(r'\d+', ' ', text)
     # Remove any double spaces that may form
     text = re.sub(r'\s+', ' ', text).strip()
@@ -70,9 +72,9 @@ def clean_text(text):
     text = re.sub(r"\'t", " not", text)
     text = re.sub(r"\'ve", " have", text)
     text = re.sub(r"\'m", " am", text)
-    text = re.sub(r'unk' , ' ' , text)
+    text = re.sub(r'unk', ' ', text)
     return text
-    
+
 train_df['text'] = train_df['text'].apply(clean_text)
 valid_df['text'] = valid_df['text'].apply(clean_text)
 # train_df.head()
@@ -83,7 +85,8 @@ def preprocess_text(text):
     processed_words = [stemmer.stem(word) for word in words 
                        if word not in stop_words]
     return ' '.join(processed_words)
-    
+
+
 # Apply preprocessing to all text
 train_df['text'] = train_df['text'].apply(preprocess_text)
 valid_df['text'] = valid_df['text'].apply(preprocess_text)
@@ -102,29 +105,33 @@ irrelevant_sentiment = irrelevant_words['text']
 # plt.title(f'Count Plot of Sentiments', fontweight='bold', color='darkblue')
 # plt.ylabel("Count", fontsize=12)
 # for p in ax.patches:
-#         ax.annotate(f'{int(p.get_height())}', 
-#                     (p.get_x() + p.get_width() / 2., p.get_height()), 
-#                     ha='center', va='bottom', 
-#                     xytext=(0, 5), textcoords='offset points', fontsize=10, color='black')
+#         ax.annotate(f'{int(p.get_height())}',
+#                     (p.get_x() + p.get_width() / 2., p.get_height()),
+#                     ha='center', va='bottom',
+#                     xytext=(0, 5), textcoords='offset points',
+#                     fontsize=10, color='black')
 # plt.tight_layout(pad=2)
 # plt.show()
 # plt.figure(figsize=(6,6))
-# plt.pie(x =train_df['airline_sentiment'].value_counts().values, 
+# plt.pie(x =train_df['airline_sentiment'].value_counts().values,
 #             labels=train_df['airline_sentiment'].value_counts().keys(),
 #             autopct="%1.1f%%", textprops={"fontsize":10,"fontweight":"black"})
-# plt.title('Sentiments Distribution') 
+# plt.title('Sentiments Distribution')
 # plt.show()
 pd.crosstab(train_df['airline_sentiment'], 
-            train_df['airline_sentiment']).T.style.background_gradient(subset=['negative'],cmap='Reds')\
-            .background_gradient(subset=['positive'], cmap='Greens')\
-            .background_gradient(subset=['neutral'], cmap='Blues')
+            train_df['airline_sentiment']).T.style.background_gradient(subset=['negative'],
+                                                                       cmap='Reds')\.background_gradient(subset=['positive'], 
+                                                                                                         cmap='Greens')\.background_gradient(subset=['neutral'], 
+                                                                                                                                             cmap='Blues')
 # Combine all text into one string
 text = " ".join(train_df["text"])
 tokens = text.split()
 # Count the frequency of occurrence of each word
 word_counts = Counter(tokens)
-# Take the word with the highest frequency of occurrence
-top_words = word_counts.most_common(20)  # Take the top 20 words
+# Take the word with the highest
+# frequency of occurrence
+top_words = word_counts.most_common(20)
+# Take the top 20 words
 # --- Visualisasi 1: Bar Chart ---
 # Separating words and their numbers
 words, counts = zip(*top_words)
@@ -148,17 +155,21 @@ wordcloud = WordCloud(
 # plt.figure(figsize=(12, 6))
 # plt.imshow(wordcloud, interpolation='bilinear')
 # plt.axis("off")
-# plt.title("WordCloud of Frequently Appearing Words", fontsize=16, fontweight='bold')
+# plt.title("WordCloud of Frequently Appearing Words",
+# fontsize=16, fontweight='bold')
 # plt.show()
 positive_words = ' '.join(positive_sentiment)
-# Tokenize the words and count frequency for positive sentiment
+# Tokenize the words and
+# count frequency for positive sentiment
 words_positif = positive_words.split()
 word_counts_positif = Counter(words_positif)
 # Display the most common words for positive sentiment
 common_words_positif = word_counts_positif.most_common(10)
-# Create word cloud for positive sentiment with a green colormap
+# Create word cloud for positive
+# sentiment with a green colormap
 wordcloud_positif = WordCloud(
-    width=800, height=400, background_color='white', colormap='Greens').generate_from_frequencies(word_counts_positif)
+    width=800, height=400, background_color='white',
+    colormap='Greens').generate_from_frequencies(word_counts_positif)
 # # Plotting the word cloud for positive sentiment
 # plt.figure(figsize=(10, 6))
 # plt.imshow(wordcloud_positif, interpolation='bilinear')
@@ -173,7 +184,7 @@ word_counts_netral = Counter(words_netral)
 common_words_netral = word_counts_netral.most_common(10)
 # Create word cloud for netral sentiment with a red colormap
 wordcloud_netral = WordCloud(
-    width=800, height=400, background_color='white', 
+    width=800, height=400, background_color='white',
     colormap='Blues').generate_from_frequencies(word_counts_netral)
 # # Plotting the word cloud for netral sentiment
 # plt.figure(figsize=(10, 6))
@@ -190,8 +201,8 @@ word_counts_negatif = Counter(words_negatif)
 common_words_negatif = word_counts_negatif.most_common(10)
 # Create word cloud for negative sentiment with a red colormap
 wordcloud_negatif = WordCloud(
-    width=800, height=400, 
-    background_color='white', 
+    width=800, height=400,
+    background_color='white',
     colormap='Reds').generate_from_frequencies(word_counts_negatif)
 # # Plotting the word cloud for negative sentiment
 # plt.figure(figsize=(10, 6))
@@ -204,16 +215,16 @@ train_df =train_df[['text','airline_sentiment']]
 train_df.sample(5)
 valid_df =valid_df[['text','airline_sentiment']]
 valid_df.sample(5)
-train_df['airline_sentiment'] = train_df['airline_sentiment'].map({'positive': 1 , 
+train_df['airline_sentiment'] = train_df['airline_sentiment'].map({'positive': 1 ,
                                                                    'negative': 0 ,'neutral':2 , 'irrelevant': 2})
-valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map({'positive': 1 , 
+valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map({'positive': 1 ,
                                                                    'negative': 0 ,'neutral':2 , 'irrelevant': 2})
 train_texts = train_df['text'].values
 train_labels = train_df['airline_sentiment'].values
 val_texts = valid_df['text'].values
 val_labels = valid_df['airline_sentiment'].values
-tokenizer = Tokenizer(num_words=10000)  
-tokenizer.fit_on_texts(train_texts)  
+tokenizer = Tokenizer(num_words=10000)
+tokenizer.fit_on_texts(train_texts)
 train_sequences = tokenizer.texts_to_sequences(train_texts)
 val_sequences = tokenizer.texts_to_sequences(val_texts)
 max_sequence_length = 100
@@ -254,7 +265,8 @@ test_labels = np.array(y_test)
 val_labels = np.array(y_val)
 # Create the LSTM model and compile
 model = models.Sequential([
-    Embedding(input_dim=10000, output_dim=100, input_length=max_sequence_length),
+    Embedding(input_dim=10000, output_dim=100,
+              input_length=max_sequence_length),
     layers.LSTM(64, return_sequences=True),
     layers.LSTM(32),
     layers.Dropout(0.2),
@@ -269,7 +281,8 @@ model_summary = model.summary()
 # Fit the model with the training data
 # Using early stopping because the results was not converging for test data
 # Create an EarlyStopping callback
-early_stopping = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
+early_stopping = EarlyStopping(monitor='val_loss',
+                               patience=3, restore_best_weights=True)
 # Fit the model with the EarlyStopping callback
 # Reshape the input sequences to include the sequence length dimension
     # classifier.train_sequences = classifier.train_sequences.reshape(
