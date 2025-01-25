@@ -58,6 +58,21 @@ def build_model():
     return model
 
 
+# Load the trained model and tokenizer
+def load_model_and_tokenizer():
+    model = load_model('sentiment_model.h5')
+    tokenizer = joblib.load('tokenizer.pkl')
+    return model, tokenizer
+
+# Predict sentiment
+def predict_sentiment(model, tokenizer, text, max_len=100):
+    preprocessed_text = preprocess_text(text)
+    sequence = tokenizer.texts_to_sequences([preprocessed_text])
+    padded_sequence = pad_sequences(sequence, maxlen=max_len)
+    prediction = model.predict(padded_sequence)
+    return prediction
+
+
 if __name__ == "__main__":
     df = pd.read_csv("MLOps_Project/Tweets.csv")
     df['processed_text'] = df['text'].apply(clean_text).apply(preprocess_text)
