@@ -6,7 +6,11 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+sys.path.insert(0,
+                os.path.abspath(
+                    os.path.join(os.path.dirname(__file__),
+                                 '../src')
+                ))
 from model import build_model, clean_text
 from model import preprocess_text, remove_stop_words
 
