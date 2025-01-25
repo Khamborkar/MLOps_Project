@@ -38,6 +38,26 @@ def preprocess_text(text):
     return ' '.join(processed_words)
 
 
+def build_model():
+        model = models.Sequential([
+            Embedding(
+                input_dim=10000,
+                output_dim=100,
+                input_length=max_sequence_length
+            ),
+            layers.LSTM(64, return_sequences=True),
+            layers.LSTM(32),
+            layers.Dropout(0.2),
+            Dense(3, activation='softmax')
+        ])
+        model.compile(
+            optimizer='adam',
+            loss='sparse_categorical_crossentropy',
+            metrics=['accuracy']
+        )
+        return model
+
+
 if __name__ == "__main__":
     df = pd.read_csv("MLOps_Project/Tweets.csv")
     df['processed_text'] = df['text'].apply(clean_text).apply(preprocess_text)
@@ -79,25 +99,6 @@ if __name__ == "__main__":
     train_labels = np.array(y_train)
     val_labels = np.array(y_val)
     test_labels = np.array(y_test)
-
-    def build_model():
-        model = models.Sequential([
-            Embedding(
-                input_dim=10000,
-                output_dim=100,
-                input_length=max_sequence_length
-            ),
-            layers.LSTM(64, return_sequences=True),
-            layers.LSTM(32),
-            layers.Dropout(0.2),
-            Dense(3, activation='softmax')
-        ])
-        model.compile(
-            optimizer='adam',
-            loss='sparse_categorical_crossentropy',
-            metrics=['accuracy']
-        )
-        return model
 
     model = build_model()
     early_stopping = EarlyStopping(
