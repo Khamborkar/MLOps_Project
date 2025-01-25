@@ -4,20 +4,15 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
-# import tensorflow as tf
 from tensorflow.keras import layers, models
 from tensorflow.keras.layers import Embedding, Dense
-# from tensorflow.keras.layers import Embedding, GlobalAveragePooling1D, Dense
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
-# import matplotlib.pyplot as plt
-# import seaborn as sns
 from wordcloud import WordCloud
 from collections import Counter
 import pickle
 from sklearn.model_selection import train_test_split
-# import matplotlib.pyplot as plt
 import string
 from tensorflow.keras.callbacks import EarlyStopping
 nltk.download('stopwords')
@@ -26,15 +21,10 @@ nltk.download('punkt_tab')
 df = pd.read_csv("MLOps_Project\\Tweets.csv")
 df.head()
 train_df = pd.read_csv("MLOps_Project\\Tweets.csv")
-# train_df.head()
 # data validation
 valid_df = pd.read_csv("MLOps_Project\\Tweets.csv")
-# valid_df.head()
 # data cleaning
 train_df.shape
-# train_df.isna().sum()
-# train_df.duplicated().sum()
-# train_df.shape
 
 
 def clean_text(text):
@@ -102,30 +92,7 @@ neutral_words = train_df[train_df['airline_sentiment'] == 'neutral']
 neutral_sentiment = neutral_words['text']
 irrelevant_words = train_df[train_df['airline_sentiment'] == 'irrelevant']
 irrelevant_sentiment = irrelevant_words['text']
-# plt.figure(figsize=(8, 6))
-# sns.set_style(style="whitegrid")
-# ax = sns.countplot(data=train_df, x='airline_sentiment', palette="Set2", edgecolor="black")
-# plt.title(f'Count Plot of Sentiments', fontweight='bold', color='darkblue')
-# plt.ylabel("Count", fontsize=12)
-# for p in ax.patches:
-#         ax.annotate(f'{int(p.get_height())}',
-#                     (p.get_x() + p.get_width() / 2., p.get_height()),
-#                     ha='center', va='bottom',
-#                     xytext=(0, 5), textcoords='offset points',
-#                     fontsize=10, color='black')
-# plt.tight_layout(pad=2)
-# plt.show()
-# plt.figure(figsize=(6,6))
-# plt.pie(x =train_df['airline_sentiment'].value_counts().values,
-#             labels=train_df['airline_sentiment'].value_counts().keys(),
-#             autopct="%1.1f%%", textprops={"fontsize":10,"fontweight":"black"})
-# plt.title('Sentiments Distribution')
-# plt.show()
-pd.crosstab(train_df['airline_sentiment'],
-            train_df['airline_sentiment']
-           ).T.style.background_gradient(subset=['negative'], cmap='Reds')\
-                                                                        .background_gradient(subset=['positive'], cmap='Greens')\
-                                                                        .background_gradient(subset=['neutral'], cmap='Blues')
+
 # Combine all text into one string
 text = " ".join(train_df["text"])
 tokens = text.split()
@@ -144,13 +111,6 @@ wordcloud = WordCloud(
     background_color='white',
     colormap='viridis'
 ).generate_from_frequencies(word_counts)
-# # WordCloud
-# plt.figure(figsize=(12, 6))
-# plt.imshow(wordcloud, interpolation='bilinear')
-# plt.axis("off")
-# plt.title("WordCloud of Frequently Appearing Words",
-# fontsize=16, fontweight='bold')
-# plt.show()
 positive_words = ' '.join(positive_sentiment)
 # Tokenize the words and
 # count frequency for positive sentiment
@@ -163,12 +123,6 @@ common_words_positif = word_counts_positif.most_common(10)
 wordcloud_positif = WordCloud(
     width=800, height=400, background_color='white',
     colormap='Greens').generate_from_frequencies(word_counts_positif)
-# # Plotting the word cloud for positive sentiment
-# plt.figure(figsize=(10, 6))
-# plt.imshow(wordcloud_positif, interpolation='bilinear')
-# plt.axis('off')
-# plt.title("Word Cloud for Positive Sentiment (Green)")
-# plt.show()
 neutral_words = ' '.join(neutral_sentiment)
 # Tokenize the words and count frequency for netral sentiment
 words_netral = neutral_words.split()
@@ -179,12 +133,6 @@ common_words_netral = word_counts_netral.most_common(10)
 wordcloud_netral = WordCloud(
     width=800, height=400, background_color='white',
     colormap='Blues').generate_from_frequencies(word_counts_netral)
-# # Plotting the word cloud for netral sentiment
-# plt.figure(figsize=(10, 6))
-# plt.imshow(wordcloud_netral, interpolation='bilinear')
-# plt.axis('off')
-# plt.title("Word Cloud for Neutral Sentiment (Blue)")
-# plt.show()
 # Join all the positive and negative reviews into single strings
 negative_words = ' '.join(negative_sentiment)
 # Tokenize the words and count frequency for negative sentiment
@@ -197,21 +145,16 @@ wordcloud_negatif = WordCloud(
     width=800, height=400,
     background_color='white',
     colormap='Reds').generate_from_frequencies(word_counts_negatif)
-# # Plotting the word cloud for negative sentiment
-# plt.figure(figsize=(10, 6))
-# plt.imshow(wordcloud_negatif, interpolation='bilinear')
-# plt.axis('off')
-# plt.title("Word Cloud for Negative Sentiment (Red)")
-# plt.show()
+
 # Feature Extraction
 train_df =train_df[['text','airline_sentiment']]
 train_df.sample(5)
 valid_df =valid_df[['text','airline_sentiment']]
 valid_df.sample(5)
-train_df['airline_sentiment'] = train_df['airline_sentiment'].map({'positive': 1 ,
-                                                                   'negative': 0 ,'neutral':2 , 'irrelevant': 2})
-valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map({'positive': 1 ,
-                                                                   'negative': 0 ,'neutral':2 , 'irrelevant': 2})
+train_df['airline_sentiment'] = train_df['airline_sentiment'].map({'positive': 1,
+                                                                   'negative': 0,'neutral':2, 'irrelevant': 2})
+valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map({'positive': 1,
+                                                                   'negative': 0,'neutral':2, 'irrelevant': 2})
 train_texts = train_df['text'].values
 train_labels = train_df['airline_sentiment'].values
 val_texts = valid_df['text'].values
@@ -227,13 +170,14 @@ with open('tokenizer2.pkl', 'wb') as file:
     pickle.dump(tokenizer, file)
 print("The tokenizer has been saved.")
 
-# Function to remove the stop words
+
 def remove_stop_words(text):
     stop_words = set(stopwords.words('english'))
     words = word_tokenize(text)
     filtered_words = [word for word in words if word not in stop_words and word not in string.punctuation]
     return " ".join(filtered_words)
-    
+
+
 # create 'processed_text' which contains the preprocessed text
 df['processed_text'] = df['text'].apply(clean_text)
 df['processed_text'] = df['processed_text'].apply(remove_stop_words)
