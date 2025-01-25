@@ -2,7 +2,6 @@ scikit-learn
 pytest
 flake8
 pandas
-re
 nltk
 nltk.corpus
 nltk.stem
@@ -15,4 +14,3 @@ seaborn
 wordcloud
 collections
 matplotlib.pyplot
-string
