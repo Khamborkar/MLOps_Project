@@ -31,8 +31,8 @@ class TestModel(unittest.TestCase):
         """Test to validate the model's output accuracy."""
         # Load dataset
         train_df = pd.read_csv("Tweets.csv")
-        train_df['text'] = train_df['text'].apply(clean_text)
-        train_df['text'] = train_df['text'].apply(preprocess_text)
+        train_df['processed_text'] = train_df['text'].apply(clean_text)
+        train_df['processed_text'] = train_df['text'].apply(preprocess_text)
 
         # Create sentiment mapping
         dummy_df = train_df['airline_sentiment'].map({
