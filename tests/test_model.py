@@ -1,4 +1,4 @@
-from src.model import model.py
+import src.model
 
 test_loss, test_accuracy = model.evaluate(X_val,val_labels)
 print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
