@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from src import model, clean_text, preprocess_text, train_test_split
+from src import model, clean_text, preprocess_text, remove_stop_words
 
 
 class TestModel(unittest.TestCase):
@@ -72,7 +72,6 @@ class TestModel(unittest.TestCase):
         self.assertGreater(
             test_accuracy, 0.5, "Model accuracy is below acceptable threshold."
         )
-
 
 if __name__ == '__main__':
     unittest.main()
