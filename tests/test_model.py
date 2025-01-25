@@ -1,50 +1,63 @@
-# lint-fixme: NoInheritFromObject
-
 import unittest
-from src.model import model  # Replace with the actual function name
-from src.model import clean_text
-from src.model import remove_stop_words
-from src.model import preprocess_text
-
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from src.model import model, clean_text, remove_stop_words, preprocess_text  # Replace with actual paths
 
 class TestModel(unittest.TestCase):
+    """Unit test class for the model."""
 
     def test_model_output_shape(self):
-        # Generate sample input data (replace with appropriate data for your model)
-        # create 'processed_text' which contains the preprocessed text
+        """Test to validate the model's output accuracy."""
+        # Load dataset
         train_df = pd.read_csv("MLOps_Project\\Tweets.csv")
         train_df['text'] = train_df['text'].apply(clean_text)
+        train_df['text'] = train_df['text'].apply(preprocess_text)
+
+        # Ensure stop words are handled
         stemmer = PorterStemmer()
         stop_words = set(stopwords.words('english'))
-        train_df['text'] = train_df['text'].apply(preprocess_text)
-        text = " ".join(train_df["text"])
-        df['processed_text'] = df['text'].apply(clean_text)
-        df['processed_text'] = df['processed_text'].apply(remove_stop_words)
-        # Create sentiment value from sentiment
-        df['airline_sentiment_value'] = df['airline_sentiment'].map({'positive': 1 , 'negative': 0 ,'neutral':2})
-        df.head()
-        X_train, X_temp, y_train, y_temp = train_test_split(df['processed_text'], df['airline_sentiment_value'], test_size=0.3, random_state=42)
-        X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+        # Processed text
+        train_df['processed_text'] = train_df['text'].apply(remove_stop_words)
+
+        # Create sentiment mapping
+        train_df['airline_sentiment_value'] = train_df['airline_sentiment'].map({
+            'positive': 1,
+            'negative': 0,
+            'neutral': 2
+        })
+
+        # Train/test split
+        X_train, X_temp, y_train, y_temp = train_test_split(
+            train_df['processed_text'], train_df['airline_sentiment_value'],
+            test_size=0.3, random_state=42
+        )
+        X_val, X_test, y_val, y_test = train_test_split(
+            X_temp, y_temp, test_size=0.5, random_state=42
+        )
+
         # Tokenization and padding
         tokenizer = Tokenizer(num_words=10000)
         tokenizer.fit_on_texts(X_train)
-        train_sequences = tokenizer.texts_to_sequences(X_train)
-        test_sequences = tokenizer.texts_to_sequences(X_test)
-        val_sequences = tokenizer.texts_to_sequences(X_val)
-        max_sequence_length = 100
-        X_train = pad_sequences(train_sequences, maxlen=max_sequence_length)
-        X_test = pad_sequences(test_sequences, maxlen=max_sequence_length)
-        X_val = pad_sequences(val_sequences, maxlen=max_sequence_length)
+        X_train = pad_sequences(tokenizer.texts_to_sequences(X_train), maxlen=100)
+        X_val = pad_sequences(tokenizer.texts_to_sequences(X_val), maxlen=100)
+        X_test = pad_sequences(tokenizer.texts_to_sequences(X_test), maxlen=100)
+
         # Convert labels to NumPy arrays
         train_labels = np.array(y_train)
-        test_labels = np.array(y_test)
         val_labels = np.array(y_val)
-        # Get the model output
-        model_output = model()
-        test_loss, test_accuracy = model.evaluate(X_val,val_labels)
-        print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
-        return test_accuracy
 
+        # Load the model and evaluate
+        model_instance = model()
+        test_loss, test_accuracy = model_instance[0].evaluate(X_val, val_labels)
+        
+        print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
+        self.assertGreater(test_accuracy, 0.5, "Model accuracy is below acceptable threshold.")
 
 if __name__ == '__main__':
     unittest.main()
