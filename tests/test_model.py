@@ -73,5 +73,6 @@ class TestModel(unittest.TestCase):
             test_accuracy, 0.5, "Model accuracy is below acceptable threshold."
         )
 
+
 if __name__ == '__main__':
     unittest.main()
