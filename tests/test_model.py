@@ -9,8 +9,8 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Path to your model.py file
-model_path = os.path.join(os.getcwd(), 'src', 'model.py')
-# model_path = 'src/model.py'
+# model_path = os.path.join(os.getcwd(), 'src', 'model.py')
+model_path = 'src/model.py'
 
 # Load the module
 spec = importlib.util.spec_from_file_location("model", model_path)
@@ -19,10 +19,10 @@ sys.modules["model"] = model
 spec.loader.exec_module(model)
 
 # Access functions directly via the dynamically loaded module
-build_model = model.build_model()
-clean_text = model.clean_text()
-preprocess_text = model.preprocess_text()
-remove_stop_words = model.remove_stop_words()
+build_model = model.build_model
+clean_text = model.clean_text
+preprocess_text = model.preprocess_text
+remove_stop_words = model.remove_stop_words
 
 
 class TestModel(unittest.TestCase):
