@@ -263,44 +263,49 @@ train_labels = np.array(y_train)
 test_labels = np.array(y_test)
 val_labels = np.array(y_val)
 # Create the LSTM model and compile
-model = models.Sequential([
-    Embedding(input_dim=10000, output_dim=100,
-              input_length=max_sequence_length),
-    layers.LSTM(64, return_sequences=True),
-    layers.LSTM(32),
-    layers.Dropout(0.2),
-    Dense(3, activation='softmax')
-])
-model.compile(
-    optimizer='adam',
-    loss='sparse_categorical_crossentropy',
-    metrics=['accuracy']
-)
-model_summary = model.summary()
-# Fit the model with the training data
-# Using early stopping because the results was not converging for test data
-# Create an EarlyStopping callback
-early_stopping = EarlyStopping(monitor='val_loss',
-                               patience=3, restore_best_weights=True)
-# Fit the model with the EarlyStopping callback
-# Reshape the input sequences to include the sequence length dimension
-    # classifier.train_sequences = classifier.train_sequences.reshape(
-    #     classifier.train_sequences.shape[0], 1, classifier.train_sequences.shape[1]
-    # )
-    # classifier.val_sequences = classifier.val_sequences.reshape(
-    #     classifier.val_sequences.shape[0], 1, classifier.val_sequences.shape[1]
-    # )
-history = model.fit(
-    X_train, train_labels,
-    validation_data=(X_val, val_labels),
-    epochs=20,
-    batch_size=32,
-    verbose=1,
-    callbacks=[early_stopping]
-)
-model.save('model.h5')
-test_loss, test_accuracy = model.evaluate(X_test, test_labels)
+def model():
+    model = models.Sequential([
+        Embedding(input_dim=10000, output_dim=100,
+                  input_length=max_sequence_length),
+        layers.LSTM(64, return_sequences=True),
+        layers.LSTM(32),
+        layers.Dropout(0.2),
+        Dense(3, activation='softmax')
+    ])
+    model.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    model_summary = model.summary()
+    # Fit the model with the training data
+    # Using early stopping because the results was not converging for test data
+    # Create an EarlyStopping callback
+    early_stopping = EarlyStopping(monitor='val_loss',
+                                   patience=3, restore_best_weights=True)
+    # Fit the model with the EarlyStopping callback
+    # Reshape the input sequences to include the sequence length dimension
+        # classifier.train_sequences = classifier.train_sequences.reshape(
+        #     classifier.train_sequences.shape[0], 1, classifier.train_sequences.shape[1]
+        # )
+        # classifier.val_sequences = classifier.val_sequences.reshape(
+        #     classifier.val_sequences.shape[0], 1, classifier.val_sequences.shape[1]
+        # )
+    history = model.fit(
+        X_train, train_labels,
+        validation_data=(X_val, val_labels),
+        epochs=20,
+        batch_size=32,
+        verbose=1,
+        callbacks=[early_stopping]
+    )
+    model.save('model.h5')
+    list = [model, history]
+    return list
+    
+test_loss, test_accuracy = model()[0].evaluate(X_test, test_labels)
 print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
+history =model()[1]
 # plt.plot(history.history['accuracy'], label='Training Accuracy')
 # plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
 # plt.xlabel('Epochs')
