@@ -1,3 +1,5 @@
+from src.model import build_model, clean_text
+from src.model import preprocess_text, remove_stop_words
 import sys
 import os
 sys.path.insert(0,
@@ -11,8 +13,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from model import build_model, clean_text
-from model import preprocess_text, remove_stop_words
 
 
 class TestModel(unittest.TestCase):
