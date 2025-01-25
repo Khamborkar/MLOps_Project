@@ -10,7 +10,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping
 
-
 # Download required NLTK data
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -42,29 +41,27 @@ def preprocess_text(text):
 if __name__ == "__main__":
     df = pd.read_csv("MLOps_Project/Tweets.csv")
     df['processed_text'] = df['text'].apply(clean_text).apply(preprocess_text)
-    
-    df['airline_sentiment_value'] = df['airline_sentiment'].map(
-        {
-            'positive': 1,
-            'negative': 0,
-            'neutral': 2
-        }
-    )
-    
+
+    df['airline_sentiment_value'] = df['airline_sentiment'].map({
+        'positive': 1,
+        'negative': 0,
+        'neutral': 2
+    })
+
     X_train, X_temp, y_train, y_temp = train_test_split(
         df['processed_text'],
         df['airline_sentiment_value'],
         test_size=0.3,
         random_state=42
     )
-    
+
     X_val, X_test, y_val, y_test = train_test_split(
         X_temp, y_temp, test_size=0.5, random_state=42
     )
-    
+
     tokenizer = Tokenizer(num_words=10000)
     tokenizer.fit_on_texts(X_train)
-    
+
     max_sequence_length = 100
     X_train = pad_sequences(
         tokenizer.texts_to_sequences(X_train),
@@ -78,15 +75,18 @@ if __name__ == "__main__":
         tokenizer.texts_to_sequences(X_test),
         maxlen=max_sequence_length
     )
-    
+
     train_labels = np.array(y_train)
     val_labels = np.array(y_val)
     test_labels = np.array(y_test)
-    
-    
+
     def build_model():
         model = models.Sequential([
-            Embedding(input_dim=10000, output_dim=100, input_length=max_sequence_length),
+            Embedding(
+                input_dim=10000,
+                output_dim=100,
+                input_length=max_sequence_length
+            ),
             layers.LSTM(64, return_sequences=True),
             layers.LSTM(32),
             layers.Dropout(0.2),
@@ -98,13 +98,12 @@ if __name__ == "__main__":
             metrics=['accuracy']
         )
         return model
-    
-    
+
     model = build_model()
     early_stopping = EarlyStopping(
         monitor='val_loss', patience=3, restore_best_weights=True
     )
-    
+
     history = model.fit(
         X_train, train_labels,
         validation_data=(X_val, val_labels),
