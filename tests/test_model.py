@@ -21,11 +21,13 @@ class TestModel(unittest.TestCase):
         train_df['processed_text'] = train_df['text'].apply(remove_stop_words)
 
         # Create sentiment mapping
-        train_df['airline_sentiment_value'] = train_df['airline_sentiment'].map({
-            'positive': 1,
-            'negative': 0,
-            'neutral': 2
-        })
+        train_df['airline_sentiment_value'] =
+            train_df['airline_sentiment'].map(
+                {
+                    'positive': 1,
+                    'negative': 0,
+                    'neutral': 2
+                })
 
         # Train/test split
         X_train, X_temp, y_train, y_temp = train_test_split(
