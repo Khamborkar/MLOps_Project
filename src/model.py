@@ -11,7 +11,7 @@ from tensorflow.keras.layers import Embedding, Dense
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 # import seaborn as sns
 from wordcloud import WordCloud
 from collections import Counter
@@ -23,12 +23,12 @@ from tensorflow.keras.callbacks import EarlyStopping
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('punkt_tab')
-df = pd.read_csv("MLOps_Project\Tweets.csv")
+df = pd.read_csv("MLOps_Project\\Tweets.csv")
 df.head()
-train_df = pd.read_csv("MLOps_Project\Tweets.csv")
+train_df = pd.read_csv("MLOps_Project\\Tweets.csv")
 # train_df.head()
 # data validation
-valid_df = pd.read_csv("MLOps_Project\Tweets.csv")
+valid_df = pd.read_csv("MLOps_Project\\Tweets.csv")
 # valid_df.head()
 # data cleaning
 train_df.shape
@@ -105,13 +105,15 @@ irrelevant_sentiment = irrelevant_words['text']
 # plt.tight_layout(pad=2)
 # plt.show()
 # plt.figure(figsize=(6,6))
-# plt.pie(x =train_df['airline_sentiment'].value_counts().values , labels=train_df['airline_sentiment'].value_counts().keys() ,autopct="%1.1f%%" , 
-# textprops={"fontsize":10,"fontweight":"black"})
+# plt.pie(x =train_df['airline_sentiment'].value_counts().values, 
+            labels=train_df['airline_sentiment'].value_counts().keys(),
+            autopct="%1.1f%%", textprops={"fontsize":10,"fontweight":"black"})
 # plt.title('Sentiments Distribution') 
 # plt.show()
-pd.crosstab(train_df['airline_sentiment'] , train_df['airline_sentiment']).T.style.background_gradient(subset=['negative'],cmap='Reds')\
-.background_gradient(subset=['positive'] , cmap='Greens')\
-.background_gradient(subset=['neutral'] , cmap='Blues')
+pd.crosstab(train_df['airline_sentiment'], 
+            train_df['airline_sentiment']).T.style.background_gradient(subset=['negative'],cmap='Reds')\
+            .background_gradient(subset=['positive'], cmap='Greens')\
+            .background_gradient(subset=['neutral'], cmap='Blues')
 # Combine all text into one string
 text = " ".join(train_df["text"])
 tokens = text.split()
@@ -167,7 +169,8 @@ word_counts_netral = Counter(words_netral)
 common_words_netral = word_counts_netral.most_common(10)
 # Create word cloud for netral sentiment with a red colormap
 wordcloud_netral = WordCloud(
-    width=800, height=400, background_color='white', colormap='Blues').generate_from_frequencies(word_counts_netral)
+    width=800, height=400, background_color='white', 
+    colormap='Blues').generate_from_frequencies(word_counts_netral)
 # # Plotting the word cloud for netral sentiment
 # plt.figure(figsize=(10, 6))
 # plt.imshow(wordcloud_netral, interpolation='bilinear')
@@ -183,7 +186,9 @@ word_counts_negatif = Counter(words_negatif)
 common_words_negatif = word_counts_negatif.most_common(10)
 # Create word cloud for negative sentiment with a red colormap
 wordcloud_negatif = WordCloud(
-    width=800, height=400, background_color='white', colormap='Reds').generate_from_frequencies(word_counts_negatif)
+    width=800, height=400, 
+    background_color='white', 
+    colormap='Reds').generate_from_frequencies(word_counts_negatif)
 # # Plotting the word cloud for negative sentiment
 # plt.figure(figsize=(10, 6))
 # plt.imshow(wordcloud_negatif, interpolation='bilinear')
@@ -195,8 +200,10 @@ train_df =train_df[['text','airline_sentiment']]
 train_df.sample(5)
 valid_df =valid_df[['text','airline_sentiment']]
 valid_df.sample(5)
-train_df['airline_sentiment'] = train_df['airline_sentiment'].map({'positive' : 1 ,  'negative' : 0 ,'neutral':2 , 'irrelevant' : 2 })
-valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map({'positive' : 1 ,  'negative' : 0 ,'neutral':2 , 'irrelevant' : 2 })
+train_df['airline_sentiment'] = train_df['airline_sentiment'].map({'positive': 1 , 
+                                                                   'negative': 0 ,'neutral':2 , 'irrelevant': 2})
+valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map({'positive': 1 , 
+                                                                   'negative': 0 ,'neutral':2 , 'irrelevant': 2})
 train_texts = train_df['text'].values
 train_labels = train_df['airline_sentiment'].values
 val_texts = valid_df['text'].values
@@ -221,7 +228,7 @@ def remove_stop_words(text):
 df['processed_text'] = df['text'].apply(clean_text)
 df['processed_text'] = df['processed_text'].apply(remove_stop_words)
 # Create sentiment value from sentiment
-df['airline_sentiment_value'] = df['airline_sentiment'].map({'positive' : 1 ,  'negative' : 0 ,'neutral':2 })
+df['airline_sentiment_value'] = df['airline_sentiment'].map({'positive': 1 , 'negative': 0 , 'neutral':2})
 # df.head()
 X_train, X_temp, y_train, y_temp = train_test_split(df['processed_text'], df['airline_sentiment_value'], test_size=0.3, random_state=42)
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
@@ -274,7 +281,7 @@ history = model.fit(
     callbacks=[early_stopping]
 )
 model.save('model.h5')
-test_loss, test_accuracy = model.evaluate(X_test,test_labels)
+test_loss, test_accuracy = model.evaluate(X_test, test_labels)
 print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
 # plt.plot(history.history['accuracy'], label='Training Accuracy')
 # plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
