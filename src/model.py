@@ -1,3 +1,5 @@
+# lint-fixme: NoInheritFromObject
+
 import pandas as pd
 import re
 import nltk
