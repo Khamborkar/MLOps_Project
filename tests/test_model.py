@@ -22,7 +22,6 @@ spec.loader.exec_module(model)
 build_model = model.build_model
 clean_text = model.clean_text
 preprocess_text = model.preprocess_text
-remove_stop_words = model.remove_stop_words
 
 
 class TestModel(unittest.TestCase):
@@ -34,10 +33,7 @@ class TestModel(unittest.TestCase):
         train_df = pd.read_csv("MLOps_Project\\Tweets.csv")
         train_df['text'] = train_df['text'].apply(clean_text)
         train_df['text'] = train_df['text'].apply(preprocess_text)
-
-        # Processed text
-        train_df['processed_text'] = train_df['text'].apply(remove_stop_words)
-
+        
         # Create sentiment mapping
         dummy_df = train_df['airline_sentiment'].map({
                                                         'positive': 1,
