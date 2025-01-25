@@ -33,7 +33,7 @@ class TestModel(unittest.TestCase):
         train_df = pd.read_csv("MLOps_Project\\Tweets.csv")
         train_df['text'] = train_df['text'].apply(clean_text)
         train_df['text'] = train_df['text'].apply(preprocess_text)
-        
+
         # Create sentiment mapping
         dummy_df = train_df['airline_sentiment'].map({
                                                         'positive': 1,
