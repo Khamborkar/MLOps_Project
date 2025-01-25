@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from src.model import build_model, clean_text, preprocess_text, remove_stop_words
+from src.model import preprocess_text, remove_stop_words
 
 
 class TestModel(unittest.TestCase):
