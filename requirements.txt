@@ -5,6 +5,5 @@ pandas
 nltk
 tensorflow
 numpy
-matplotlib.pyplot
 seaborn
 wordcloud
