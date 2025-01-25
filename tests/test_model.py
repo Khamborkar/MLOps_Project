@@ -1,9 +1,3 @@
-import unittest
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 import sys
 import os
 sys.path.insert(0,
@@ -11,6 +5,12 @@ sys.path.insert(0,
                     os.path.join(os.path.dirname(__file__),
                                  '../src')
                 ))
+import unittest
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from model import build_model, clean_text
 from model import preprocess_text, remove_stop_words
 
