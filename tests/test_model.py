@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.callbacks import EarlyStopping
 from model import build_model, clean_text, preprocess_text, remove_stop_words
 
 
@@ -66,13 +67,6 @@ class TestModel(unittest.TestCase):
         early_stopping = EarlyStopping(
             monitor='val_loss', patience=3, restore_best_weights=True
         )
-    
-        history = model.fit(
-            X_train, train_labels,
-            validation_data=(X_val, val_labels),
-            epochs=20, batch_size=32, callbacks=[early_stopping]
-        )
-        model.save('model.h5')
         test_loss, test_accuracy = model_instance[0].evaluate(
             X_val,
             val_labels
