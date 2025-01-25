@@ -3,14 +3,8 @@ pytest
 flake8
 pandas
 nltk
-nltk.corpus
-nltk.stem
-nltk.tokenize
 tensorflow
-tensorflow.keras
 numpy
 matplotlib.pyplot
 seaborn
 wordcloud
-collections
-matplotlib.pyplot
