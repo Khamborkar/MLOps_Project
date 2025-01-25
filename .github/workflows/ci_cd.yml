@@ -74,8 +74,26 @@ jobs:
     - name: Deploy to (your deployment target)
       # Example: Deploy to a local server
       run: |
-        # Your deployment script here 
-        python -m http.server 8000 
+        # Your deployment script here
+        # Step 1: Install dependencies
+        pip install -r requirements.txt
+    
+        # Step 2: Set environment variables (if needed)
+        export FLASK_APP=app.py  # Replace `app.py` with your main Flask application file
+        export FLASK_ENV=production  # Set production mode for Flask
+    
+        # Step 3: Initialize the database (if applicable)
+        # flask db upgrade  # Uncomment if needed for database migrations
+    
+        # Step 4: Start the Flask application
+        flask run --host=0.0.0.0 --port=8000
+    
+        # Optional: Use a production WSGI server like Gunicorn for production
+        # gunicorn -w 4 -b 0.0.0.0:8000 app:app
+      shell: bash
+      env:
+        pythonLocation: /opt/hostedtoolcache/Python/3.9.21/x64
+        LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.9.21/x64/lib
 
   lint:
     runs-on: ubuntu-latest
