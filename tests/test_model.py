@@ -12,10 +12,10 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 model_path = os.path.join(os.getcwd(), 'src', 'model.py')
 
 # Load the module
-spec = importlib.util.spec_from_file_location("model", model_path)
-model = importlib.util.module_from_spec(spec)
-sys.modules["model"] = model
-spec.loader.exec_module(model)
+# spec = importlib.util.spec_from_file_location("model", model_path)
+# model = importlib.util.module_from_spec(spec)
+# sys.modules["model"] = model
+# spec.loader.exec_module(model)
 
 # Access functions directly via the dynamically loaded module
 build_model = model.build_model
