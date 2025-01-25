@@ -119,10 +119,9 @@ irrelevant_sentiment = irrelevant_words['text']
 # plt.title('Sentiments Distribution')
 # plt.show()
 pd.crosstab(train_df['airline_sentiment'], 
-            train_df['airline_sentiment']).T.style.background_gradient(subset=['negative'],
-                                                                       cmap='Reds')\.background_gradient(subset=['positive'],
-                                                                                                         cmap='Greens')\.background_gradient(subset=['neutral'],
-                                                                                                                                             cmap='Blues')
+            train_df['airline_sentiment']).T.style.background_gradient(subset=['negative'], cmap='Reds')\
+                                                                        .background_gradient(subset=['positive'], cmap='Greens')\
+                                                                        .background_gradient(subset=['neutral'], cmap='Blues')
 # Combine all text into one string
 text = " ".join(train_df["text"])
 tokens = text.split()
