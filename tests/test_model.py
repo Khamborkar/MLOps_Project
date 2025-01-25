@@ -29,11 +29,16 @@ class TestModel(unittest.TestCase):
 
         # Train/test split
         X_train, X_temp, y_train, y_temp = train_test_split(
-            train_df['processed_text'], train_df['airline_sentiment_value'],
-            test_size=0.3, random_state=42
+            train_df['processed_text'],
+            train_df['airline_sentiment_value'],
+            test_size=0.3,
+            random_state=42
         )
         X_val, X_test, y_val, y_test = train_test_split(
-            X_temp, y_temp, test_size=0.5, random_state=42
+            X_temp,
+            y_temp,
+            test_size=0.5,
+            random_state=42
         )
 
         # Tokenization and padding
@@ -41,13 +46,16 @@ class TestModel(unittest.TestCase):
         tokenizer.fit_on_texts(X_train)
 
         X_train = pad_sequences(
-            tokenizer.texts_to_sequences(X_train), maxlen=100
+            tokenizer.texts_to_sequences(X_train),
+            maxlen=100
         )
         X_val = pad_sequences(
-            tokenizer.texts_to_sequences(X_val), maxlen=100
+            tokenizer.texts_to_sequences(X_val),
+            maxlen=100
         )
         X_test = pad_sequences(
-            tokenizer.texts_to_sequences(X_test), maxlen=100
+            tokenizer.texts_to_sequences(X_test),
+            maxlen=100
         )
 
         # Convert labels to NumPy arrays
@@ -55,4 +63,16 @@ class TestModel(unittest.TestCase):
 
         # Load the model and evaluate
         model_instance = model()
-        test_loss, test_accuracy = model_instance[0].evaluate(X_val, val_labels)
+        test_loss, test_accuracy = model_instance[0].evaluate(
+            X_val,
+            val_labels
+        )
+
+        print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
+        self.assertGreater(
+            test_accuracy, 0.5, "Model accuracy is below acceptable threshold."
+        )
+
+
+if __name__ == '__main__':
+    unittest.main()
