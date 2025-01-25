@@ -9,7 +9,6 @@ from tensorflow.keras.layers import Embedding, Dense
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
-from wordcloud import WordCloud
 from collections import Counter
 import pickle
 from sklearn.model_selection import train_test_split
@@ -96,60 +95,7 @@ irrelevant_sentiment = irrelevant_words['text']
 # Combine all text into one string
 text = " ".join(train_df["text"])
 tokens = text.split()
-# Count the frequency of occurrence of each word
 word_counts = Counter(tokens)
-# Take the word with the highest
-# frequency of occurrence
-top_words = word_counts.most_common(20)
-# Take the top 20 words
-# --- Visualisasi 1: Bar Chart ---
-# Separating words and their numbers
-words, counts = zip(*top_words)
-wordcloud = WordCloud(
-    width = 800,
-    height = 400,
-    background_color = 'white',
-    colormap = 'viridis'
-).generate_from_frequencies(word_counts)
-positive_words = ' '.join(positive_sentiment)
-# Tokenize the words and
-# count frequency for positive sentiment
-words_positif = positive_words.split()
-word_counts_positif = Counter(words_positif)
-# Display the most common words for positive sentiment
-common_words_positif = word_counts_positif.most_common(10)
-# Create word cloud for positive
-# sentiment with a green colormap
-wordcloud_positif = WordCloud(
-    width = 800,
-    height = 400,
-    background_color = 'white',
-    colormap = 'Greens').generate_from_frequencies(word_counts_positif)
-neutral_words = ' '.join(neutral_sentiment)
-# Tokenize the words and count frequency for netral sentiment
-words_netral = neutral_words.split()
-word_counts_netral = Counter(words_netral)
-# Display the most common words for netral sentiment
-common_words_netral = word_counts_netral.most_common(10)
-# Create word cloud for netral sentiment with a red colormap
-wordcloud_netral = WordCloud(
-    width = 800,
-    height = 400,
-    background_color = 'white',
-    colormap ='Blues').generate_from_frequencies(word_counts_netral)
-# Join all the positive and negative reviews into single strings
-negative_words = ' '.join(negative_sentiment)
-# Tokenize the words and count frequency for negative sentiment
-words_negatif = negative_words.split()
-word_counts_negatif = Counter(words_negatif)
-# Display the most common words for negative sentiment
-common_words_negatif = word_counts_negatif.most_common(10)
-# Create word cloud for negative sentiment with a red colormap
-wordcloud_negatif = WordCloud(
-    width = 800,
-    height = 400,
-    background_color = 'white',
-    colormap='Reds').generate_from_frequencies(word_counts_negatif)
 
 # Feature Extraction
 train_df = train_df[['text','airline_sentiment']]
@@ -158,11 +104,11 @@ valid_df = valid_df[['text','airline_sentiment']]
 valid_df.sample(5)
 train_df['airline_sentiment'] = train_df['airline_sentiment'].map({'positive': 1,
                                                                    'negative': 0,
-                                                                   'neutral':2,
+                                                                   'neutral': 2,
                                                                    'irrelevant': 2})
 valid_df['airline_sentiment'] = valid_df['airline_sentiment'].map({'positive': 1,
                                                                    'negative': 0,
-                                                                   'neutral':2,
+                                                                   'neutral': 2,
                                                                    'irrelevant': 2})
 train_texts = train_df['text'].values
 train_labels = train_df['airline_sentiment'].values
