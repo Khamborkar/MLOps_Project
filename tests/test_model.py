@@ -30,7 +30,7 @@ class TestModel(unittest.TestCase):
     def test_model_output_shape(self):
         """Test to validate the model's output accuracy."""
         # Load dataset
-        train_df = pd.read_csv("MLOps_Project\\Tweets.csv")
+        train_df = pd.read_csv("Tweets.csv")
         train_df['text'] = train_df['text'].apply(clean_text)
         train_df['text'] = train_df['text'].apply(preprocess_text)
 
