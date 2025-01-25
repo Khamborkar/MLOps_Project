@@ -64,10 +64,7 @@ class TestModel(unittest.TestCase):
 
         # Load the model and evaluate
         model = build_model()
-        early_stopping = EarlyStopping(
-            monitor='val_loss', patience=3, restore_best_weights=True
-        )
-        test_loss, test_accuracy = model_instance[0].evaluate(
+        test_loss, test_accuracy = model.evaluate(
             X_val,
             val_labels
         )
