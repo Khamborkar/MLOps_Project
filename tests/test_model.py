@@ -1,5 +1,5 @@
-import os
-import sys
+# import os
+# import sys
 import importlib.util
 import unittest
 import pandas as pd
@@ -9,7 +9,8 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Path to your model.py file
-model_path = os.path.join(os.getcwd(), 'src', 'model.py')
+# model_path = os.path.join(os.getcwd(), 'src', 'model.py')
+model_path = 'src/model.py'
 
 # Load the module
 # spec = importlib.util.spec_from_file_location("model", model_path)
