@@ -1,18 +1,25 @@
 import os
 import sys
+import importlib.util
 import unittest
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-sys.path.insert(0,
-                os.path.abspath(
-                    os.path.join(os.path.dirname(__file__),
-                                 '../src')
-                ))
-from src.model import build_model, clean_text
-from src.model import preprocess_text, remove_stop_words
+
+# Path to your model.py file
+model_path = 'MLOps_Project/src/model.py'
+
+# Load the module
+spec = importlib.util.spec_from_file_location("model", model_path)
+model = importlib.util.module_from_spec(spec)
+sys.modules["model"] = model
+spec.loader.exec_module(model)
+
+# Now you can access functions in model.py
+from model import build_model, clean_text
+from model import preprocess_text, remove_stop_words
 
 
 class TestModel(unittest.TestCase):
