@@ -66,7 +66,7 @@ def load_model_and_tokenizer():
     test_model = build_model()
     test_model = model.save(test_model.h5)
     tokenizer = joblib.load('tokenizer.pkl')
-    return model, tokenizer
+    return test_model, tokenizer
 
 
 # Predict sentiment
