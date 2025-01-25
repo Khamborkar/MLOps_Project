@@ -1,3 +1,6 @@
+[project]
+name = "MLOps_Project"
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
