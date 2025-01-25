@@ -42,11 +42,11 @@ def build_model():
     model = models.Sequential([
         Embedding(
             input_dim=10000,
-            output_dim=100,
-            input_length=max_sequence_length
+            output_dim=128,
+            input_length=100
         ),
-        layers.LSTM(64, return_sequences=True),
-        layers.LSTM(32),
+        layers.LSTM(128, return_sequences=True),
+        layers.LSTM(64),
         layers.Dropout(0.2),
         Dense(3, activation='softmax')
     ])
