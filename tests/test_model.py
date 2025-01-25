@@ -6,19 +6,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-
-# Path to your model.py file
-model_path = 'MLOps_Project/src/model.py'
-
-# Load the module
-spec = importlib.util.spec_from_file_location("model", model_path)
-model = importlib.util.module_from_spec(spec)
-sys.modules["model"] = model
-spec.loader.exec_module(model)
-
-# Now you can access functions in model.py
-from model import build_model, clean_text
-from model import preprocess_text, remove_stop_words
+from model.py import build_model, clean_text
+from model.py import preprocess_text, remove_stop_words
 
 
 class TestModel(unittest.TestCase):
