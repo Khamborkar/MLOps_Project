@@ -75,14 +75,17 @@ def clean_text(text):
     text = re.sub(r'unk', ' ', text)
     return text
 
+
 train_df['text'] = train_df['text'].apply(clean_text)
 valid_df['text'] = valid_df['text'].apply(clean_text)
 # train_df.head()
 stemmer = PorterStemmer()
 stop_words = set(stopwords.words('english'))
+
+
 def preprocess_text(text):
     words = text.split()
-    processed_words = [stemmer.stem(word) for word in words 
+    processed_words = [stemmer.stem(word) for word in words
                        if word not in stop_words]
     return ' '.join(processed_words)
 
@@ -118,8 +121,9 @@ irrelevant_sentiment = irrelevant_words['text']
 #             autopct="%1.1f%%", textprops={"fontsize":10,"fontweight":"black"})
 # plt.title('Sentiments Distribution')
 # plt.show()
-pd.crosstab(train_df['airline_sentiment'], 
-            train_df['airline_sentiment']).T.style.background_gradient(subset=['negative'], cmap='Reds')\
+pd.crosstab(train_df['airline_sentiment'],
+            train_df['airline_sentiment']
+           ).T.style.background_gradient(subset=['negative'], cmap='Reds')\
                                                                         .background_gradient(subset=['positive'], cmap='Greens')\
                                                                         .background_gradient(subset=['neutral'], cmap='Blues')
 # Combine all text into one string
@@ -134,16 +138,6 @@ top_words = word_counts.most_common(20)
 # --- Visualisasi 1: Bar Chart ---
 # Separating words and their numbers
 words, counts = zip(*top_words)
-# # Setup seaborn theme
-# sns.set_theme(style="whitegrid")
-# plt.figure(figsize=(12, 6))
-# sns.barplot(x=list(counts), y=list(words), palette="viridis")
-# plt.title("20 Most Frequently Occurring Words", fontsize=16, fontweight='bold')
-# plt.xlabel("Frequency", fontsize=14)
-# plt.ylabel("Words", fontsize=14)
-# plt.xticks(fontsize=12)
-# plt.yticks(fontsize=12)
-# plt.show()
 wordcloud = WordCloud(
     width=800,
     height=400,
@@ -263,6 +257,8 @@ train_labels = np.array(y_train)
 test_labels = np.array(y_test)
 val_labels = np.array(y_val)
 # Create the LSTM model and compile
+
+
 def model():
     model = models.Sequential([
         Embedding(input_dim=10000, output_dim=100,
@@ -273,42 +269,26 @@ def model():
         Dense(3, activation='softmax')
     ])
     model.compile(
-        optimizer='adam',
-        loss='sparse_categorical_crossentropy',
-        metrics=['accuracy']
+        optimizer = 'adam',
+        loss = 'sparse_categorical_crossentropy',
+        metrics = ['accuracy']
     )
-    model_summary = model.summary()
-    # Fit the model with the training data
-    # Using early stopping because the results was not converging for test data
     # Create an EarlyStopping callback
     early_stopping = EarlyStopping(monitor='val_loss',
                                    patience=3, restore_best_weights=True)
-    # Fit the model with the EarlyStopping callback
-    # Reshape the input sequences to include the sequence length dimension
-        # classifier.train_sequences = classifier.train_sequences.reshape(
-        #     classifier.train_sequences.shape[0], 1, classifier.train_sequences.shape[1]
-        # )
-        # classifier.val_sequences = classifier.val_sequences.reshape(
-        #     classifier.val_sequences.shape[0], 1, classifier.val_sequences.shape[1]
-        # )
     history = model.fit(
         X_train, train_labels,
-        validation_data=(X_val, val_labels),
-        epochs=20,
-        batch_size=32,
-        verbose=1,
-        callbacks=[early_stopping]
+        validation_data = (X_val, val_labels),
+        epochs = 20,
+        batch_size = 32,
+        verbose = 1,
+        callbacks = [early_stopping]
     )
     model.save('model.h5')
     list = [model, history]
     return list
-    
+
+
 test_loss, test_accuracy = model()[0].evaluate(X_test, test_labels)
 print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
-history =model()[1]
-# plt.plot(history.history['accuracy'], label='Training Accuracy')
-# plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-# plt.xlabel('Epochs')
-# plt.ylabel('Accuracy')
-# plt.legend()
-# plt.show()
+history = model()[1]
