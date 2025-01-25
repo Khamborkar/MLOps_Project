@@ -39,23 +39,23 @@ def preprocess_text(text):
 
 
 def build_model():
-        model = models.Sequential([
-            Embedding(
-                input_dim=10000,
-                output_dim=100,
-                input_length=max_sequence_length
-            ),
-            layers.LSTM(64, return_sequences=True),
-            layers.LSTM(32),
-            layers.Dropout(0.2),
-            Dense(3, activation='softmax')
-        ])
-        model.compile(
-            optimizer='adam',
-            loss='sparse_categorical_crossentropy',
-            metrics=['accuracy']
-        )
-        return model
+    model = models.Sequential([
+        Embedding(
+            input_dim=10000,
+            output_dim=100,
+            input_length=max_sequence_length
+        ),
+        layers.LSTM(64, return_sequences=True),
+        layers.LSTM(32),
+        layers.Dropout(0.2),
+        Dense(3, activation='softmax')
+    ])
+    model.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    return model
 
 
 if __name__ == "__main__":
