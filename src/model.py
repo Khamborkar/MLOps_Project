@@ -70,7 +70,7 @@ def load_model_and_tokenizer():
         model = load_model("src/model.h5")
         tokenizer = joblib.load("tokenizer.pkl")
         if not os.path.exists(MODEL_PATH) or not os.path.exists(TOKENIZER_PATH):
-            raise FileNotFoundError("Model or Tokenizer files still not found after training!")
+            raise FileNotFoundError("Model or Tokenizer files still not found!")
     else:
         print("Model file found!")
         model = load_model("src/model.h5")
@@ -165,8 +165,8 @@ if __name__ == "__main__":
         print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
 
         # Save the model and tokenizer
-        model.save("model.h5")
-        joblib.dump(tokenizer, "tokenizer.pkl")
+        model.save("src/model.h5")
+        joblib.dump(tokenizer, "src/tokenizer.pkl")
 
         # Log artifacts
         mlflow.keras.log_model(model, "model")
