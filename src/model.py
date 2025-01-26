@@ -66,19 +66,19 @@ def build_model():
 def load_model_and_tokenizer():
     """Load the trained model and tokenizer."""
     MODEL_SCRIPT = "src/model.py"
-    MODEL_PATH = "src/model.h5"
-    TOKEN_PATH = "tokenizer.pkl"
-    if not os.path.exists("src/model.h5"):
+    MODEL_PATH = "src/model.keras"
+    TOKEN_PATH = "src/tokenizer.pkl"
+    if not os.path.exists("src/model.keras"):
         print("Model file not found!")
         subprocess.run(['python', MODEL_SCRIPT])
-        model = load_model("src/model.h5")
-        tokenizer = joblib.load("tokenizer.pkl")
+        model = load_model("src/model.keras")
+        tokenizer = joblib.load("src/tokenizer.pkl")
         if not os.path.exists(MODEL_PATH) or not os.path.exists(TOKEN_PATH):
             raise FileNotFoundError("Model or Tokenizer files still not found")
     else:
         print("Model file found!")
-        model = load_model("src/model.h5")
-        tokenizer = joblib.load("tokenizer.pkl")
+        model = load_model("src/model.keras")
+        tokenizer = joblib.load("src/tokenizer.pkl")
     return model, tokenizer
 
 
@@ -171,8 +171,8 @@ if __name__ == "__main__":
         # Save the model and tokenizer
         # model.save("src/model.h5")
         # joblib.dump(tokenizer, "src/tokenizer.pkl")
-        model.save("model.h5")
-        joblib.dump(tokenizer, "tokenizer.pkl")
+        model.save("src/model.keras")
+        joblib.dump(tokenizer, "src/tokenizer.pkl")
 
         # Log artifacts
         mlflow.keras.log_model(model, "model")
