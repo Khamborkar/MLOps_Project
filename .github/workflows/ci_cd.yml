@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3  # Use v3 for consistency
 
     - name: Set up Python
       uses: actions/setup-python@v3
@@ -27,16 +27,45 @@ jobs:
       run: |
         flake8 src/ tests/
 
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Use v3 for consistency
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install mlflow
+
+      - name: Train model
+        run: |
+          python src/model.py  # The script that trains and saves the model
+
+      - name: Save model artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: model-artifacts
+          path: |
+            src/model.h5
+            src/tokenizer.pkl
+
   test:
     needs: build
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Use v3 for consistency
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: '3.9'
 
@@ -59,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3  # Use v3 for consistency
 
     - name: Set up Python
       uses: actions/setup-python@v3
@@ -70,25 +99,22 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install mlflow
+
+    - name: Run Flask application
+      run: |
+        python app.py  # Ensure Flask app can access model
 
     - name: Deploy to (your deployment target)
       # Example: Deploy to a local server
       run: |
-        # Your deployment script here
-        # Step 1: Install dependencies
-        pip install -r requirements.txt
-    
-        # Step 2: Set environment variables (if needed)
-        export FLASK_APP=app.py  # Replace `app.py` with your main Flask application file
+        # Step 1: Set environment variables (if needed)
+        export FLASK_APP=app.py
         export FLASK_ENV=production  # Set production mode for Flask
-    
-        # Step 3: Initialize the database (if applicable)
-        # flask db upgrade  # Uncomment if needed for database migrations
-    
-        # Step 4: Start the Flask application
+
+        # Step 2: Start the Flask application
         flask run --host=0.0.0.0 --port=8000
-    
-        # Optional: Use a production WSGI server like Gunicorn for production
+        # Optional: Use a production WSGI server like Gunicorn
         # gunicorn -w 4 -b 0.0.0.0:8000 app:app
       shell: bash
       env:
@@ -99,12 +125,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3  # Use v3 for consistency
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v3
       with:
-        python-version: '3.9'  # or your desired Python version
+        python-version: '3.9'
 
     - name: Install dependencies
       run: |
@@ -114,4 +140,3 @@ jobs:
     - name: Run linter
       run: |
         flake8 src tests --count --select=E9,E7,E5,F,C901,W --show-source --statistics
-        flake8 src tests --count --exit-zero # To continue even after finding errors
