@@ -39,7 +39,9 @@ stop_words = set(nltk.corpus.stopwords.words("english"))
 def preprocess_text(text):
     """Preprocess text by stemming and removing stopwords."""
     words = text.split()
-    processed_words = [stemmer.stem(word) for word in words if word not in stop_words]
+    processed_words = [
+        stemmer.stem(word) for word in words if word not in stop_words
+    ]
     return " ".join(processed_words)
 
 
@@ -86,7 +88,11 @@ if __name__ == "__main__":
 
     with mlflow.start_run():
         df = pd.read_csv("MLOps_Project/Tweets.csv")
-        df["processed_text"] = df["text"].apply(clean_text).apply(preprocess_text)
+        df["processed_text"] = (
+            df["text"]
+            .apply(clean_text)
+            .apply(preprocess_text)
+        )
 
         df["airline_sentiment_value"] = df["airline_sentiment"].map({
             "positive": 1,
