@@ -121,6 +121,12 @@ jobs:
       env:
         pythonLocation: /opt/hostedtoolcache/Python/3.9.21/x64
         LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.9.21/x64/lib
+        
+    - name: Integration test
+      run: curl -f https://127.0.0.1:5000 || exit 1
+
+    - name: Stop Flask
+      run: killall python
 
   lint:
     runs-on: ubuntu-latest
