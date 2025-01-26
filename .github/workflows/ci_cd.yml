@@ -28,6 +28,7 @@ jobs:
         flake8 src/ tests/
 
   train:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -57,7 +58,7 @@ jobs:
             src/tokenizer.pkl
 
   test:
-    needs: build
+    needs: train
     runs-on: ubuntu-latest
 
     steps:
