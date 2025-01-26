@@ -50,7 +50,7 @@ jobs:
           python src/model.py  # The script that trains and saves the model
 
       - name: Save model artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: model-artifacts
           path: |
