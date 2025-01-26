@@ -64,13 +64,16 @@ def build_model():
 
 def load_model_and_tokenizer():
     """Load the trained model and tokenizer."""
+    MODEL_SCRIPT = "src/model.py"
+    MODEL_PATH = "src/model.h5"
+    TOKENIZER_PATH = "tokenizer.pkl"
     if not os.path.exists("src/model.h5"):
         print("Model file not found!")
         subprocess.run(['python', MODEL_SCRIPT])
         model = load_model("src/model.h5")
         tokenizer = joblib.load("tokenizer.pkl")
         if not os.path.exists(MODEL_PATH) or not os.path.exists(TOKENIZER_PATH):
-            raise FileNotFoundError("Model or Tokenizer files still not found!")
+            raise FileNotFoundError("Model or Tokenizer files still not found")
     else:
         print("Model file found!")
         model = load_model("src/model.h5")
