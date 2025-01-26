@@ -123,10 +123,14 @@ jobs:
         LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.9.21/x64/lib
         
     - name: Integration test
-      run: curl -f https://127.0.0.1:5000 || exit 1
+      run: |
+        # Check if the Flask app is accessible
+        curl -f http://127.0.0.1:5000 || exit 1
 
     - name: Stop Flask
-      run: killall python
+      run: |
+        # Find and stop the Flask process by matching the app name
+        pkill -f "gunicorn" || pkill -f "flask"
 
   lint:
     runs-on: ubuntu-latest
