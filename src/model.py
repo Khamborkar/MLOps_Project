@@ -96,7 +96,7 @@ if __name__ == "__main__":
     mlflow.set_experiment("Sentiment Analysis")
 
     with mlflow.start_run():
-        df = pd.read_csv("MLOps_Project/Tweets.csv")
+        df = pd.read_csv("Tweets.csv")
         df["processed_text"] = (
             df["text"]
             .apply(clean_text)
