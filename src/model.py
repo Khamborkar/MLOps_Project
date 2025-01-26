@@ -9,7 +9,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping
-# from keras.models import load_model
+from keras.models import load_model
 import joblib
 
 # Download required NLTK data
@@ -62,11 +62,11 @@ def build_model():
 
 # Load the trained model and tokenizer
 def load_model_and_tokenizer():
-    # model = load_model('model.h5')
-    test_model = build_model()
-    test_model = model.save(test_model.h5)
+    model = load_model('model.h5')
+    # test_model = build_model()
+    # test_model = model.save(test_model.h5)
     tokenizer = joblib.load('tokenizer.pkl')
-    return test_model, tokenizer
+    return model, tokenizer
 
 
 # Predict sentiment
@@ -131,5 +131,6 @@ if __name__ == "__main__":
         epochs=20, batch_size=32, callbacks=[early_stopping]
     )
     model.save('model.h5')
+    joblib.dump(tokenizer, 'tokenizer.pkl')
     test_loss, test_accuracy = model.evaluate(X_test, test_labels)
     print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
