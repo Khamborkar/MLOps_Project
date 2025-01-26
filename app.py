@@ -9,12 +9,20 @@ from model import preprocess_text
 # Initialize Flask app
 app = Flask(__name__)
 
-@app.route('/api/sentiment', methods=['POST'])
-# Load the model and tokenizer once at the start
-# try:
-model, tokenizer = load_model_and_tokenizer()
-# except Exception as e:
-#     print(f"Error loading model and tokenizer: {e}")
+# Load the model and tokenizer once at the start of the application
+try:
+    model, tokenizer = load_model_and_tokenizer()
+    print("Model and tokenizer loaded successfully.")
+except Exception as e:
+    print(f"Error loading model and tokenizer: {e}")
+    model, tokenizer = None, None
+    
+# @app.route('/api/sentiment', methods=['POST'])
+# # Load the model and tokenizer once at the start
+# # try:
+# model, tokenizer = load_model_and_tokenizer()
+# # except Exception as e:
+# #     print(f"Error loading model and tokenizer: {e}")
 
 # Define a route to predict sentiment from text
 @app.route('/predict', methods=['POST'])
