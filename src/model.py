@@ -84,58 +84,85 @@ def predict_sentiment(model, tokenizer, text, max_len=100):
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("MLOps_Project/Tweets.csv")
-    df['processed_text'] = df['text'].apply(clean_text).apply(preprocess_text)
+    # Start MLflow experiment
+    mlflow.set_experiment("Sentiment Analysis")
 
-    df['airline_sentiment_value'] = df['airline_sentiment'].map({
-        'positive': 1,
-        'negative': 0,
-        'neutral': 2
-    })
+    with mlflow.start_run():
+        df = pd.read_csv("MLOps_Project/Tweets.csv")
+        df['processed_text'] = df['text'].apply(clean_text).apply(preprocess_text)
+    
+        df['airline_sentiment_value'] = df['airline_sentiment'].map({
+            'positive': 1,
+            'negative': 0,
+            'neutral': 2
+        })
+    
+        X_train, X_temp, y_train, y_temp = train_test_split(
+            df['processed_text'],
+            df['airline_sentiment_value'],
+            test_size=0.3,
+            random_state=42
+        )
+    
+        X_val, X_test, y_val, y_test = train_test_split(
+            X_temp, y_temp, test_size=0.5, random_state=42
+        )
+    
+        tokenizer = Tokenizer(num_words=10000)
+        tokenizer.fit_on_texts(X_train)
+    
+        max_sequence_length = 100
+        X_train = pad_sequences(
+            tokenizer.texts_to_sequences(X_train),
+            maxlen=max_sequence_length
+        )
+        X_val = pad_sequences(
+            tokenizer.texts_to_sequences(X_val),
+            maxlen=max_sequence_length
+        )
+        X_test = pad_sequences(
+            tokenizer.texts_to_sequences(X_test),
+            maxlen=max_sequence_length
+        )
+    
+        train_labels = np.array(y_train)
+        val_labels = np.array(y_val)
+        test_labels = np.array(y_test)
+    
+        model = build_model()
+        early_stopping = EarlyStopping(
+            monitor='val_loss', patience=3, restore_best_weights=True
+        )
 
-    X_train, X_temp, y_train, y_temp = train_test_split(
-        df['processed_text'],
-        df['airline_sentiment_value'],
-        test_size=0.3,
-        random_state=42
-    )
+        # Log model hyperparameters
+        mlflow.log_param("embedding_dim", 128)
+        mlflow.log_param("lstm_units_1", 128)
+        mlflow.log_param("lstm_units_2", 64)
+        mlflow.log_param("dropout_rate", 0.2)
+        mlflow.log_param("optimizer", "adam")
+        mlflow.log_param("batch_size", 32)
+        mlflow.log_param("epochs", 20)
+        
+        history = model.fit(
+            X_train, train_labels,
+            validation_data=(X_val, val_labels),
+            epochs=20, batch_size=32, callbacks=[early_stopping]
+        )
 
-    X_val, X_test, y_val, y_test = train_test_split(
-        X_temp, y_temp, test_size=0.5, random_state=42
-    )
+        # Log metrics
+        test_loss, test_accuracy = model.evaluate(X_test, test_labels)
+        mlflow.log_metric("test_loss", test_loss)
+        mlflow.log_metric("test_accuracy", test_accuracy)
 
-    tokenizer = Tokenizer(num_words=10000)
-    tokenizer.fit_on_texts(X_train)
+        print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
+        
+        model.save('model.h5')
+        joblib.dump(tokenizer, 'tokenizer.pkl')
 
-    max_sequence_length = 100
-    X_train = pad_sequences(
-        tokenizer.texts_to_sequences(X_train),
-        maxlen=max_sequence_length
-    )
-    X_val = pad_sequences(
-        tokenizer.texts_to_sequences(X_val),
-        maxlen=max_sequence_length
-    )
-    X_test = pad_sequences(
-        tokenizer.texts_to_sequences(X_test),
-        maxlen=max_sequence_length
-    )
+        # Log artifacts
+        mlflow.keras.log_model(model, "model")
+        mlflow.log_artifact("tokenizer.pkl")
 
-    train_labels = np.array(y_train)
-    val_labels = np.array(y_val)
-    test_labels = np.array(y_test)
-
-    model = build_model()
-    early_stopping = EarlyStopping(
-        monitor='val_loss', patience=3, restore_best_weights=True
-    )
-
-    history = model.fit(
-        X_train, train_labels,
-        validation_data=(X_val, val_labels),
-        epochs=20, batch_size=32, callbacks=[early_stopping]
-    )
-    model.save('model.h5')
-    joblib.dump(tokenizer, 'tokenizer.pkl')
-    test_loss, test_accuracy = model.evaluate(X_test, test_labels)
-    print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
+        print("MLflow run completed.")
+        # test_loss, test_accuracy = model.evaluate(X_test, test_labels)
+        # print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
