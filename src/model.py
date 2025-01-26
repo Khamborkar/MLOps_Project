@@ -169,8 +169,10 @@ if __name__ == "__main__":
         print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
 
         # Save the model and tokenizer
-        model.save("src/model.h5")
-        joblib.dump(tokenizer, "src/tokenizer.pkl")
+        # model.save("src/model.h5")
+        # joblib.dump(tokenizer, "src/tokenizer.pkl")
+        model.save("model.h5")
+        joblib.dump(tokenizer, "tokenizer.pkl")
 
         # Log artifacts
         mlflow.keras.log_model(model, "model")
